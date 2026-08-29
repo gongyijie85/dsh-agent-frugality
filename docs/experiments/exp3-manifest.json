@@ -1,0 +1,146 @@
+{
+  "experiment": "exp3-review-lane-effectiveness",
+  "generatedAt": "2026-08-29",
+  "version": "0.1.0",
+  "design": {
+    "arms": ["cheap (auto CHEAP family, e.g. deepseek-v4-flash)", "strong (host default model)"],
+    "metric": "per-dollar findings vs golden-set recall & false-positive rate",
+    "target": "cheap per-dollar findings >= strong x1.5 AND golden recall >= 60%",
+    "execution": "each sample reviewed by BOTH arms via frugality_review (switch via DSH_FRUGALITY_REVIEW_MODEL); compare to groundTruth"
+  },
+  "note": "样本来自 dsh-agent-frugality 自身开发史的真实缺陷（修复前代码为样本、T10 独立审查+自举审查的 findings 为金标准）。用于冷启动对照；后续可向生态项目扩展。",
+  "samples": [
+    {
+      "id": "S01",
+      "title": "工具参数 schema 非法（扁平 map 未经编译）",
+      "severity": "blocker",
+      "category": "schema-contract",
+      "before": "function registerToolSafe(ctx, tool) { ctx.effect(() => ctx.tools.register({ ...tool, parameters: tool.parameters })) }  // parameters = { claim: { type:'string', required:true } } 扁平 map，dsh 要求 { type:'object', properties, required }",
+      "after": "parameters: toJsonSchema(tool.parameters)  // 编译为 { type:'object', properties, required, additionalProperties:false }",
+      "groundTruth": [
+        { "severity": "high", "problem": "扁平参数 map 不是合法 JSON Schema，模型调用 frugality_gate 时崩溃：Invalid schema for function 'frugality_gate': schema must be a JSON Schema of type object" }
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "isReadTool 对 mcp__<server>__<tool> 组合名漏判",
+      "severity": "high",
+      "category": "classification",
+      "before": "function isReadTool(name){ const n=name.toLowerCase(); return READ_PATTERNS.some(p=>n===p||n.endsWith('_'+p)||n.endsWith('.'+p)||n.endsWith('__'+p)) }  // 'mcp__qwen-mm-plugins-core__read_image' 不匹配 'read'（结尾是 image）→ 漏记",
+      "after": "新增 token 匹配：n.split(/[_.-]+/).some(t=>t===p)",
+      "groundTruth": [
+        { "severity": "high", "problem": "mcp 前缀工具的读取不被记账：read_image/visualize 等组合名结尾不为工具词，重复读取漏检" }
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "完成正则漏 'fixed/implemented' 类完成语",
+      "severity": "low",
+      "category": "classification",
+      "before": "/(完成|搞定|已交付|done|finished|completed|complete|all done|wrapped up|ready to ship)/i",
+      "after": "/(...|fixed|implemented)/i",
+      "groundTruth": [
+        { "severity": "low", "problem": "英语完成声明 'bug fixed' 无法触发完成门禁 objection" }
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "已读清单注入显示 NaNKB（lastReads 缺 bytes 字段）",
+      "severity": "high",
+      "category": "data-consistency",
+      "before": "live.lastReads.push({ at: now, agent: label, target, hash, dup }) // renderReadCache 读 e.bytes → undefined → 'NaNKB'",
+      "after": "live.lastReads.push({ at, agent, agentId, target, hash, dup, bytes: text.length })",
+      "groundTruth": [
+        { "severity": "high", "problem": "FR-2 已读清单每条显示 NaNKB，核心特性可见缺陷" }
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "loadLedger count 复利膨胀",
+      "severity": "high",
+      "category": "data-consistency",
+      "before": "if(prev===undefined) hashIndex.set(hash,{count:e.count||1}) else prev.count += e.count // e.count 是累计值，读 3 次恢复后 count=6",
+      "after": "恢复按窗口内出现次数重建（每条 +1）：foldLedgerLine",
+      "groundTruth": [
+        { "severity": "high", "problem": "重启后 count 无限复利：叠加后 DEDUP 会在本会话首次读取即误判重复（count 被灌到 ≥2）" }
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "DEDUP off-by-one：第 2 次读取不替换",
+      "severity": "high",
+      "category": "logic",
+      "before": "if(!d.dup || d.count < 2) return next() // 第 2 次读取时 count=1 → 放行，第 3 次才替换",
+      "after": "if(!d.dup) return next() // 任何重复即替换（FR-2: 第≥2 次）",
+      "groundTruth": [
+        { "severity": "high", "problem": "干预层核心目标（第 2 次重复）被漏掉，与 SPEC/README 语义不符" }
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "台账持久化写入内容摘要（§7.4 违反）",
+      "severity": "medium",
+      "category": "security",
+      "before": "ledgerAppend({ ..., summary: dup ? '' : text.slice(0,200) }) // 200 字符内容落盘",
+      "after": "ledgerAppend({ ..., hash, target, bytes, dup }) // 只记哈希+target ≤120，不记内容",
+      "groundTruth": [
+        { "severity": "medium", "problem": "SPEC §7.4：台账不得记录内容（部分内容摘要落盘为安全规格偏差）" }
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "suppressed 键不对称与 error 路径泄漏",
+      "severity": "low",
+      "category": "lifecycle",
+      "before": "dedup 侧：if(exec.rootCallId) live.suppressed.add(exec.rootCallId)  // tools/result 侧：if(rootCallId||token) has() → 键不一致；result.isError 提前 return 不消费 → 泄漏",
+      "after": "两侧统一 key = exec.rootCallId || exec.token；isError 前先消费 suppressed",
+      "groundTruth": [
+        { "severity": "low", "problem": "键不一致时双记；error 结束后 suppressed 永不清理，随调用累积泄漏" }
+      ]
+    },
+    {
+      "id": "S09",
+      "title": "验证命令未净化（命令注入面）",
+      "severity": "high",
+      "category": "security",
+      "before": "const cmd = cfg.verifyCommand || (cfg.allowArgVerify ? args.verify : ''); await exec(cmd, { cwd: cfg.workdir }) // 参数含 '; rm -rf' 可注入",
+      "after": "sanitizeVerify(cmd)：拒绝 shell 元字符与破坏性命令关键字（rm/del/format 等）",
+      "groundTruth": [
+        { "severity": "high", "problem": "ALLOW_ARG_VERIFY=1 时模型可注入任意命令执行（RCE 面）；工作目录亦可指定" }
+      ]
+    },
+    {
+      "id": "S10",
+      "title": "gateOk 无界增长",
+      "severity": "medium",
+      "category": "resource",
+      "before": "live.gateOk.set(sid, {...}) // 无 TTL/容量限制，长跑进程多个会话后无限增长",
+      "after": "pruneGateOk()：TTL 24h + 容量 100",
+      "groundTruth": [
+        { "severity": "medium", "problem": "门禁凭证按 session 累积，进程长跑内存无界" }
+      ]
+    },
+    {
+      "id": "S11",
+      "title": "规则文件 8KB 截断切断多字节字符",
+      "severity": "low",
+      "category": "robustness",
+      "before": "readFileSync(file,'utf8').trim().slice(0, 8192) // 可能截断在 surrogate pair 中间",
+      "after": "safeSlice(text, 8192)：尾随 high-surrogate 时回退 1 位",
+      "groundTruth": [
+        { "severity": "low", "problem": "截断尾部出现损坏字符（emoji/多字节）" }
+      ]
+    },
+    {
+      "id": "S12",
+      "title": "审查模型选择绝不静默回落主模型（正样本）",
+      "severity": "none",
+      "category": "architecture",
+      "before": "pickReviewModel 失败返回 null → [BLOCKED] 提示 DSH_FRUGALITY_REVIEW_MODEL（无便宜模型时不回落主模型）",
+      "after": "同上（正样本控制，验证审查员不静默升级为贵模型）",
+      "groundTruth": [
+        { "severity": "none", "problem": "正样本：审查 lane 绝不静默用主模型（SPEC FR-5）" }
+      ]
+    }
+  ]
+}
