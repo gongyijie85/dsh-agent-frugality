@@ -20,22 +20,23 @@
 
 ## Phase 3 — Review（质量门禁）
 
-- [ ] **T10 独立代码审查**：子代理审查进行中（SPEC 一致性/§7 安全/§8 接口/运行时正确性/测试覆盖/发布阻断项）
-- [ ] **T11 修复 + 复审**：T10 findings 全部关闭或明确豁免；修复后重跑 T09
+- [x] **T09 机械检查**：node --check ×2 OK；node --test 18/18；frugality_ledger 冒烟 OK；save后 ledger JSONL 落盘验证
+- [x] **T10 独立代码审查**：子代理审查完成 verdict=NEEDS_REVISION（1 blocker + 3 HIGH + 2 medium + 4 low）；`frugality_review` 低成本 lane 同步审查（9 findings，采纳 4/豁免 5）
+- [x] **T11 修复 + 复审**：blocker（脚手架 no-op 化）+ 3 HIGH（NaNKB/复利/off-by-one 回归测试锁住）+ §7.4 + suppressed 键统一 + FR-6 预算全部关闭；误报/豁免 3 项记录理由；18/18 全绿
 
-## Phase 4 — 发布（需用户确认的边界动作）
+## Phase 4 — 发布（待用户协助：GitHub 仓库创建 + npm 凭据）
 
-- [ ] **T12 仓库初始化**：`git init`（main）→ `.gitignore`（node_modules/tgz/logs）→ 初始 commit（规范 message）
-- [ ] **T13 GitHub 仓库**：创建远程仓库（用户账户 gongyijie85/dsh-agent-frugality 或用户指定）+ push + `topic: dsh-plugin`（供 topic 同步型 marketplace 收录）
-- [ ] **T14 tag + Release**：`v0.1.0` tag → GitHub Release（notes=CHANGELOG 0.1.0 段）→ 附件 tgz（`npm pack` 产物）
-- [ ] **T15 npm（可选，待用户确认）**：npm publish 前确认 scope/凭据；发布后 `dsh plugin add` 可直接装
-- [ ] **T16 市场收录**：确认 ≥1 家 marketplace 收录（AwesomeHou/dsh-plugin-marketplace 为 topic 同步自动收录；chnjames/dsh-plugin-market 提交 PR/issue）；记录收录状态到发布说明
+- [x] **T12 仓库初始化**：git init(main) + .gitignore（含脚手架残留忽略）+ commit `968d806`（12 文件 / 1398 行）+ tag `v0.1.0`
+- [ ] **T13 GitHub 仓库**：用户网页创建 `gongyijie85/dsh-agent-frugality`（public 空仓库）→ 自动推送 main + v0.1.0 tag + 加 topic=dsh-plugin
+- [ ] **T14 tag + Release**：tag 已打；Release notes = CHANGELOG 0.1.0 + docs/POST.md（推送后由 gh/网页创建）
+- [ ] **T15 npm**：package.json 已 `private:false` + repository 字段；`npm publish` 需用户终端执行（沙箱拒绝读 npm 凭据）或进一步授权
+- [ ] **T16 市场收录**：topic=dsh-plugin 后自动收录（AwesomeHou/dsh-plugin-marketplace 等 sync 型）
 
 ## Phase 5 — 推广包装
 
-- [ ] **T17 发布公告**：`docs/POST.md`（中文版）——研究背景（真实结论+幻觉数字澄清）、三层失效、方案机制、使用示例（三个工具截图式文本）、安装命令、免责声明
-- [ ] **T18 宣传物料**：X/Twitter thread 草稿（EN，7 条）、中文社区/公众号长文要点（含研究故事线）、HN Show HN 草稿、dsh 社区/群公告模板
-- [ ] **T19 发布日执行清单**：发布顺序（GitHub→npm→市场→公告），每步验证命令
+- [x] **T17 发布公告**：docs/POST.md（中文）
+- [x] **T18 宣传物料**：docs/PROMO.md（X thread 7 条 / Show HN / 中文长文要点）
+- [x] **T19 发布日执行清单**：docs/PROMO.md 尾部（git push / Release / 市场 / npm / 公告顺序）
 
 ## 依赖图
 

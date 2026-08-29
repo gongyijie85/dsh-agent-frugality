@@ -22,6 +22,16 @@
 - 工具参数 schema 非法崩溃：`parameters` 扁平 map → `toJsonSchema` 编译为合规 JSON Schema（`type:"object"` + properties + required）。
 - `isReadTool` 对 `mcp__<server>__<tool>` 组合名漏判 → token 化匹配。
 - 完成正则漏 `fixed/implemented` 类完成语。
+- **T10 独立审查修复（2026-08-29，8 findings → 4 修复 + 1 部分采纳 + 3 误报/豁免）**：
+  - 已读清单注入显示 `NaNKB` → 记账统一走 `applyRead`（lastReads 带 bytes；回归测试锁住）。
+  - `loadLedger` 恢复时 count 复利膨胀 → `foldLedgerLine` 按窗口内出现次数重建（回归测试锁住）。
+  - DEDUP 干预层第 2 次读取未触发 → 判定改为「任何重复即替换」（FR-2 语义）。
+  - §7.4 安全偏差：ledger 持久化写入内容摘要 → 只记 hash + target + 元数据。
+  - 记账/恢复路径无测试 → `applyRead`/`foldLedgerLine` 纯函数化 + 2 组边界用例（共 18/18 全绿）。
+  - suppressed 键不对称/泄漏 → 统一 `rootCallId || token`，error 结束路径同样消费。
+  - FR-6 预算未强制 → 启动读取改为尾部 ≤512KB（`openSync` 定位读）。
+  - 误报/豁免：gate 无强制机制（turn-stopping 即机制，实测拦截成功）、count 访问逻辑正确、`?v=` 查询串（mode-boost 生态先例）、steer 用 raw 对象（注入环境无法 import createUserMessage，与 mode-boost 同款且实测可用）。
+- 发布阻断项：脚手架 `src/index.ts`/`tsconfig`/`tsdown.config`（与真实实现冲突、构建会覆盖 lib/）→ `scripts/build.sh` 改为 no-op + `.gitignore` 忽略残留 + README 说明（JS 直出无编译）。
 
 ### Known limitations
 
