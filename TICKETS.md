@@ -38,6 +38,12 @@
 - [x] **T18 宣传物料**：docs/PROMO.md（X thread 7 条 / Show HN / 中文长文要点）
 - [x] **T19 发布日执行清单**：docs/PROMO.md 尾部（git push / Release / 市场 / npm / 公告顺序）
 
+## Phase 6 — 实验数据运营（用户确认的长期策略，2026-08-29 起）
+
+- [x] **T20 实验管线**：`scripts/experiment-report.mjs`（零依赖快照生成器）+ `docs/EXPERIMENT.md`（4 实验设计 + 预算 $0~2.4 + 运营模式章节）+ **首份快照** `docs/experiments/2026-08-29-snapshot.{json,md}`（34 reads / 5.9% dup / gate 3过3拦 / review 1×9）
+- [ ] **T21 数据发布节奏**：每周快照 → README 实验数据段更新；达到里程碑（累计重复率/节省 token）后更新 README 徽章
+- [ ] **T22 迭代循环**：Exp-1/4 零成本持续观察；Exp-3（review 每美元发现数）跑样本；阈值触发干预（dupRate>15% 一周 → DEDUP=1 开）；每版 CHANGELOG 附「基线→改进→验证」
+
 ## 依赖图
 
 ```

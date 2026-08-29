@@ -108,6 +108,17 @@ node --check lib/index.js && node --check lib/core.js
 
 `$DSH_HOME/agent-frugality.log`（JSONL：apply/read/dedup-replace/gate/gate-object/review/错误）与 `$DSH_HOME/agent-frugality-ledger.jsonl`（台账持久化）。
 
+## 实验数据（日常即实验）
+
+插件天生带度量：每个真实会话都在喂台账，周期性快照发布到仓库作为效果证据。
+
+```powershell
+node scripts/experiment-report.mjs   # -> docs/experiments/YYYY-MM-DD-snapshot.{json,md}
+```
+
+- 首份快照（2026-08-29）：34 次读取 / 5.9% 重复率 / 93KB / 门禁 3 过 3 拦 / 审查 lane 1 次 9 findings / 0 插件错误
+- 阈值与运营闭环：[`docs/EXPERIMENT.md`](docs/EXPERIMENT.md)（「运营模式」节）
+
 ## 发布与收录状态（v0.1.0，2026-08-29）
 
 - [x] GitHub：github.com/gongyijie85/dsh-agent-frugality（main + tag v0.1.0；topics：`dsh-plugin` `deepseek-harness` `multi-agent`）

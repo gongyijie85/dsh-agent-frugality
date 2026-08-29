@@ -1,0 +1,73 @@
+{
+  "generatedAt": "2026-08-29T09:27:58.392Z",
+  "pluginVersion": "0.1.0",
+  "window": {
+    "first": "2026-08-29T06:20:41.290Z",
+    "last": "2026-08-29T09:24:45.920Z",
+    "count": 34
+  },
+  "totals": {
+    "reads": 34,
+    "dups": 2,
+    "bytes": 95492,
+    "dupRate": 0.0588,
+    "savedTokensUpperEstimate": 1404
+  },
+  "byAgent": [
+    {
+      "agentId": "session-ae9bb060-172b-4b46-a8f5-20a3a81da117",
+      "label": "session-ae9bb060-172b-4b",
+      "reads": 7,
+      "dups": 0,
+      "bytes": 6831,
+      "dupRate": 0
+    },
+    {
+      "agentId": "08ea3aba-256b-44b9-94a6-e28a482f302e",
+      "label": "08ea3aba-256b-44b9-94a6-",
+      "reads": 27,
+      "dups": 2,
+      "bytes": 88661,
+      "dupRate": 0.0741
+    }
+  ],
+  "byTool": [
+    {
+      "tool": "grep",
+      "reads": 5,
+      "dups": 0,
+      "bytes": 13950,
+      "dupRate": 0
+    },
+    {
+      "tool": "read",
+      "reads": 19,
+      "dups": 0,
+      "bytes": 77181,
+      "dupRate": 0
+    },
+    {
+      "tool": "glob",
+      "reads": 8,
+      "dups": 2,
+      "bytes": 996,
+      "dupRate": 0.25
+    },
+    {
+      "tool": "web_search",
+      "reads": 2,
+      "dups": 0,
+      "bytes": 3365,
+      "dupRate": 0
+    }
+  ],
+  "gateAndReview": {
+    "gatePass": 3,
+    "gateBlocked": 0,
+    "gateObjections": 3,
+    "reviews": 1,
+    "reviewFindings": 9,
+    "dedupReplaces": 0,
+    "errors": 0
+  }
+}

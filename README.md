@@ -110,6 +110,17 @@ node --check lib/index.js && node --check lib/core.js
 
 `$DSH_HOME/agent-frugality.log` (JSONL events) and `$DSH_HOME/agent-frugality-ledger.jsonl` (ledger persistence).
 
+## Experiment data (daily-use-as-experiment)
+
+The plugin is instrumented by design: every real session feeds the ledger, and periodic snapshots are published to the repo as evidence.
+
+```powershell
+node scripts/experiment-report.mjs   # -> docs/experiments/YYYY-MM-DD-snapshot.{json,md}
+```
+
+- First snapshot (2026-08-29): 34 reads, 5.9% duplicate rate, 93KB, gate 3 pass / 3 objections, review lane 1×9 findings, 0 plugin errors
+- Thresholds & ops loop: [`docs/EXPERIMENT.md`](docs/EXPERIMENT.md) ("运营模式" section)
+
 ## Release & ingestion status (v0.1.0, 2026-08-29)
 
 - [x] GitHub: github.com/gongyijie85/dsh-agent-frugality (main + tag v0.1.0, topics: `dsh-plugin` `deepseek-harness` `multi-agent`)
