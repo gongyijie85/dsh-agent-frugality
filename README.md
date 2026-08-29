@@ -1,103 +1,126 @@
 # dsh-agent-frugality
 
-> 对抗多智能体三层机制性失效的 DSH 防御插件：**读取台账去重度量 · 免疫压缩规则区 · 完成机械门禁 · 低成本审查 lane**。零外部依赖，`dev_inject_plugin` 注入即用。
->
-> 📐 规格事实源：[`docs/SPEC.md`](docs/SPEC.md) · 📋 任务清单：[`TICKETS.md`](TICKETS.md) · 📝 变更记录：[`CHANGELOG.md`](CHANGELOG.md)
+> **English** | [中文](README.zh.md)
 
-## 为什么
+[![npm version](https://img.shields.io/npm/v/dsh-agent-frugality?color=blue)](https://www.npmjs.com/package/dsh-agent-frugality)
+[![GitHub](https://img.shields.io/badge/GitHub-gongyijie85%2Fdsh--agent--frugality-black?logo=github)](https://github.com/gongyijie85/dsh-agent-frugality)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-18%2F18%20passing-brightgreen)]()
+[![Zero deps](https://img.shields.io/badge/dependencies-none-9cf)]()
 
-多智能体系统存在三类被实测与独立证据支持的机制性失效：
+> A DeepSeek Harness defense plugin against three mechanism-level failure modes of multi-agent systems:
+> **read-ledger dedup · compaction-immune rules · mechanical completion gate · cheap-review lane**.
+> Zero external dependencies — inject and go.
 
-| 失效 | 证据 | 本插件防御 |
+📐 Spec: [`docs/SPEC.md`](docs/SPEC.md) · 📋 Tickets: [`TICKETS.md`](TICKETS.md) · 📝 Changelog: [`CHANGELOG.md`](CHANGELOG.md)
+
+## Why
+
+Three failure modes are real and independently evidenced:
+
+| Failure | Evidence | This plugin's defense |
 |---|---|---|
-| **子智能体重复读取**（无共享记忆 → 内耗烧 token） | Claude Code [#46968](https://github.com/anthropics/claude-code/issues/46968)、[#45660](https://github.com/anthropics/claude-code/issues/45660)；Jack Maguire 实测子智能体占长任务大部分成本、修复可省 70–90% | `read-ledger` 内容哈希台账 + 已读清单注入 |
-| **提示词失效**（软规劝短期失效、压缩后丢失） | Anthropic《Building effective agents》：成本权衡来自架构而非提示语 | `immutable-core` 规则区（免疫压缩）+ `completion-gate` 机械门禁 |
-| **贵模型误区**（贵模型产出低、当审查员反而更弱） | Anthropic《multi-agent research system》：收益来自 token 预算；RouteLLM/FrugalGPT 生态共识 | `review-lane` 便宜模型独立审查 |
+| **Subagent duplicate reads** (no shared memory → token waste) | Claude Code [#46968](https://github.com/anthropics/claude-code/issues/46968), [#45660](https://github.com/anthropics/claude-code/issues/45660); Jack Maguire: subagents account for most token cost in long runs, 70–90% recoverable | `read-ledger` content-hash ledger + "already read" sheet injection |
+| **Prompt decay** (soft rules fade, compaction erases them) | Anthropic *Building effective agents*: cost tradeoffs come from architecture, not wording | `immutable-core` rules in a compaction-immune prompt section + `completion-gate` mechanical gate |
+| **Expensive-model fallacy** (costly models are worse reviewers) | Anthropic *multi-agent research system*: gains come from token budget; RouteLLM/FrugalGPT consensus | `review-lane` cheap-model independent review |
 
-**限制边界**：本插件不禁止多智能体，而是把失效变成**可度量 + 可物理阻断**；**先度量后干预**（DEDUP 默认关）。
+This plugin does **not** forbid multi-agents — it makes the waste *visible* and the behavior *mechanically bounded*; **measure first, intervene second** (DEDUP off by default).
 
-> ⚠️ **科研诚实声明**：插件不背书流传的"$85K 多智能体实验"具体数字（54.7% / 243→311 / Opus 23.9% 等经核实**无一手出处**，属生成式摘要幻觉，核实报告见 `research/01-primary-source.md`，位于 D:\plugins\research\85k-experiment）。本插件针对有独立证据的机制问题本身。
+> ⚠️ **Research-integrity note**: this plugin does not endorse the headline numbers of the "$85K multi-agent experiment" (54.7% duplicate reads / 243→311 commits / Opus 23.9% — verified to have **no primary source**; they are a generated-summary hallucination; verification report: `research/01-primary-source.md`). It targets the mechanism problems themselves, which do have independent evidence.
 
-## 安装
+## Install
 
-**已发布（v0.1.0）**：
+**Published (v0.1.0)**:
 
 ```powershell
-# GitHub 通道（主分发；marketplace 收录基于此）
+# GitHub channel (primary; marketplace ingestion is topic-driven)
 dsh plugin add github:gongyijie85/dsh-agent-frugality
 
-# npm 通道
+# npm channel
 npm install dsh-agent-frugality
 
-# 运行时注入（本地开发态，免重启）
+# Local dev (runtime injection, no restart)
 dev_inject_plugin D:\plugins\dsh-agent-frugality
-# 卸载
+# Uninstall
 dev_uninject_plugin dsh-agent-frugality
 ```
 
-## 机制（一图流）
+## How it works
 
 ```
-工具调用 ──→ tools/result ──→ [read-ledger] SHA-1 台账 → JSONL 持久化
+tool calls ──→ tools/result ──→ [read-ledger] SHA-1 ledger → JSONL persistence
                       │                │
-                      └─ 第≥2次同内容 ──→ [dedup-replace] 摘要替换（可选 DEDUP=1）
-system-prompt/assemble ──→ [immutable-core] frugality-rules（免疫压缩）+ frugality-read-cache（已读清单）
-agent/turn-stopping ──→ 完成性声明 且 无 gate 凭证 ──→ steer 塞回（≤2 次）
-frugality_gate / frugality_review / frugality_ledger ──→ 三个工具
+                      └─ 2nd+ same content ──→ [dedup-replace] summary swap (DEDUP=1)
+system-prompt/assemble ──→ [immutable-core] frugality-rules (compaction-immune) + frugality-read-cache
+agent/turn-stopping ──→ completion claim without gate proof ──→ steer back (≤2)
+frugality_gate / frugality_review / frugality_ledger ──→ three tools
 ```
 
-## 工具
+## Tools
 
-| 工具 | 用途 |
+| Tool | Purpose |
 |---|---|
-| `frugality_ledger` | 读取台账（per-agent reads/dups/bytes、重复率、门禁状态、审查计数；含 JSONL 恢复）——先看基线，再决定开干预 |
-| `frugality_gate` | 完成门禁：`claim` 必填；验证命令 exit 0 才通过（命令仅宿主配置） |
-| `frugality_review` | 低成本审查：便宜模型独立审查代码/diff/白名单文件（quick/deep），输出 verdict+findings |
+| `frugality_ledger` | Read ledger (per-agent reads/dups/bytes, dup rate, gate & review counters; JSONL-restored) — baseline first, then decide on intervention |
+| `frugality_gate` | Completion gate: `claim` required; verify command must exit 0 (host-configured only) |
+| `frugality_review` | Cheap-review lane: independent review on a CHEAP-class model (quick/deep), verdict + findings |
 
-## 配置（环境变量全表）
+## Configuration (env vars — full table in docs/SPEC.md §6)
 
-| 变量 | 默认 | 说明 |
+| Variable | Default | Meaning |
 |---|---|---|
-| `DSH_FRUGALITY_DEDUP` | `0` | `1`=同内容第 ≥2 次读取替换为摘要提示 |
-| `DSH_FRUGALITY_GATE` | `1` | `0`=禁用完成门禁 |
-| `DSH_FRUGALITY_GATE_MAX` | `2` | 门禁 objection 轮数上限（防死循环） |
-| `DSH_FRUGALITY_VERIFY` | 空 | 默认验证命令（如 `npm test`；exit 0=通过） |
-| `DSH_FRUGALITY_ALLOW_ARG_VERIFY` | `0` | `1`=允许工具参数 verify（**默认忽略防模型 RCE**，SPEC §7.1） |
-| `DSH_FRUGALITY_REVIEW_MODEL` | 空 | 审查模型；空=自动选 CHEAP 族 |
-| `DSH_FRUGALITY_RULES` | 空 | 规则文件（≤8KB）；空=内置 4 条 |
-| `DSH_FRUGALITY_LEDGER_CAP` | `30` | 已读清单注入条数上限 |
-| `DSH_FRUGALITY_WORKDIR` | cwd | gate 验证命令工作目录 |
-| `DSH_FRUGALITY_READ_PATTERNS` | 空 | 追加读类工具子串（逗号分隔） |
+| `DSH_FRUGALITY_DEDUP` | `0` | `1` = replace 2nd+ identical read with a summary |
+| `DSH_FRUGALITY_GATE` | `1` | `0` = disable completion gate |
+| `DSH_FRUGALITY_GATE_MAX` | `2` | max gate objections (anti-loop) |
+| `DSH_FRUGALITY_VERIFY` | empty | default verify command (`npm test`; exit 0 = pass) |
+| `DSH_FRUGALITY_ALLOW_ARG_VERIFY` | `0` | `1` = accept tool-arg verify (**default ignored — anti-RCE**, SPEC §7.1) |
+| `DSH_FRUGALITY_REVIEW_MODEL` | auto | review model id; auto = CHEAP family |
+| `DSH_FRUGALITY_RULES` | builtin | rules file (≤8KB) |
+| `DSH_FRUGALITY_LEDGER_CAP` | `30` | read-cache sheet max entries |
+| `DSH_FRUGALITY_WORKDIR` | cwd | gate verify command cwd |
+| `DSH_FRUGALITY_READ_PATTERNS` | builtin | extra read-tool substrings (comma-separated) |
 
-## 目录结构
+## Layout
 
 ```
-lib/index.js       宿主装配（hooks/工具注册/配置/持久化）
-lib/core.js        纯函数与常量（可测试，14 用例全绿）
-test/core.test.mjs  node:test 零依赖测试
-docs/SPEC.md       技术规格（FR/NFR/安全模型 §7/接口契约 §8/验收标准 §9）
-TICKETS.md         产品化任务清单（Phase 1-5）
-CHANGELOG.md       变更记录
+lib/index.js       host assembly (hooks / tool registration / config / persistence)
+lib/core.js        pure functions & constants (18 unit tests green)
+test/core.test.mjs node:test, zero-dependency
+docs/SPEC.md       spec (FR / NFR / security model §7 / API contract §8 / acceptance §9)
+docs/MARKETPLACE.md marketplace ingestion kit
+TICKETS.md         productization checklist (phase 1-5)
+CHANGELOG.md       release notes
 LICENSE            MIT
 ```
 
-## 测试与验证
+## Test & verify
 
 ```powershell
-node --test test/core.test.mjs   # 14/14（toJsonSchema/isReadTool/targetOf/duplicateOf/parseFindings/...）
+node --test test/core.test.mjs   # 18/18
 node --check lib/index.js && node --check lib/core.js
 ```
 
-## 设计原则
+## Design principles
 
-1. **先度量后干预**：台账默认开、DEDUP 默认关；`frugality_ledger` 跑基线，净收益为正再开干预。
-2. **物理阻断 > 提示词**：规则落到工具结果错误 / turn-stopping objection / deny；提示词仅回显（规则区本身免疫压缩）。
-3. **只补缺口**：共享记忆用 `dsh-memory-vault`、路由降级用 `dsh-model-router`、任务门禁用 `dsh-agent-teams`；本插件只补读取台账、host 级完成门禁、低成本审查 lane。
-4. **零依赖**：仅 node: 内置 + `lib/core.js`；JS 直出（dsh-mode-boost 同路径，无 tsc checkout 依赖）。
+1. **Measure first, intervene second** — ledger on, DEDUP off until your baseline shows net gain.
+2. **Mechanical bounds > prompts** — rules land in tool-result errors / turn-stopping objections; prompts only echo (the rules section itself is compaction-immune).
+3. **Only fill real gaps** — shared memory via `dsh-memory-vault`, routing via `dsh-model-router`, task gates via `dsh-agent-teams`; this plugin adds read-ledger, host completion gate, cheap-review lane.
+4. **Zero deps** — node built-ins + `lib/core.js`; JS-direct like `dsh-mode-boost`.
 
-## 日志
+## Logs
 
-`$DSH_HOME/agent-frugality.log`（JSONL：apply/read/dedup-replace/gate/gate-object/review/错误）与 `$DSH_HOME/agent-frugality-ledger.jsonl`（台账持久化）。
+`$DSH_HOME/agent-frugality.log` (JSONL events) and `$DSH_HOME/agent-frugality-ledger.jsonl` (ledger persistence).
+
+## Release & ingestion status (v0.1.0, 2026-08-29)
+
+- [x] GitHub: github.com/gongyijie85/dsh-agent-frugality (main + tag v0.1.0, topics: `dsh-plugin` `deepseek-harness` `multi-agent`)
+- [x] npm: dsh-agent-frugality@0.1.0
+- [x] Topics set (`dsh-plugin` → auto-synced by [AwesomeHou marketplace](https://github.com/AwesomeHou/dsh-plugin-marketplace) and dsh-market)
+- [ ] awesome-dsh-plugin curated registry submission (kit in [`docs/MARKETPLACE.md`](docs/MARKETPLACE.md)) — required for one-click install inside dsh-market
+- [ ] GitHub Release @ v0.1.0 (notes: CHANGELOG 0.1.0 section)
+
+## Contributing
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md). Security review: SPEC §7 model (verify command is host-config only; review file whitelist; no content in logs).
 
 ## License
 
