@@ -1,0 +1,13 @@
+node_modules/
+*.tgz
+*.log
+*.log.*
+.DS_Store
+.agent-teams/
+
+# 脚手架残留（2026-08-29 T10 审查后停用：JS 直出插件无编译流程；
+# scripts/build.sh 已改为 no-op，src/tsconfig/tsdown 不再参与构建）
+src/
+tsconfig.json
+tsdown.config.ts
+scripts/build.sh

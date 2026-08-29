@@ -1,0 +1,35 @@
+{
+  "name": "@dsh-external/dsh-agent-frugality",
+  "version": "0.1.0",
+  "description": "DSH 对抗多智能体三层失效的防御插件：读取台账去重度量(read-ledger)、免疫压缩规则区+完成机械门禁(immutable-core+completion-gate)、低成本审查lane(role-router)。零外部依赖，注入即用。",
+  "private": false,
+  "type": "module",
+  "main": "./lib/index.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/core.test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gongyijie85/dsh-agent-frugality.git"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "multi-agent",
+    "context-management",
+    "agent-cost",
+    "tool-ledger",
+    "completion-gate"
+  ],
+  "files": [
+    "lib",
+    "docs",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ]
+}
