@@ -1,0 +1,18 @@
+{
+  "arm": "cheap",
+  "model": "deepseek-v4-flash",
+  "results": [
+    {"id": "S01", "verdict": "needs_revision", "findings": [{"severity": "high", "problem": "工具参数 schema 非法：tool.parameters 是扁平 map，但 dsh 要求 { type:'object', properties, required } 格式；直接传递导致工具注册失败/崩溃"}, {"severity": "medium", "problem": "ctx.effect 中注册工具有副作用，响应式依赖重复执行可能导致工具重复注册或覆盖"}], "rawModel": "deepseek-v4-flash"},
+    {"id": "S02", "verdict": "needs_revision", "findings": [{"severity": "medium", "problem": "isReadTool 对 mcp__<server>__<tool> 组合名漏判，read_image 等以工具名结尾的读取不被识别"}], "rawModel": "deepseek-v4-flash"},
+    {"id": "S03", "verdict": "needs_revision", "findings": [{"severity": "low", "problem": "正则未覆盖 fixed/implemented/solved 等完成语，可能导致漏匹配"}], "rawModel": "deepseek-v4-flash"},
+    {"id": "S04", "verdict": "pass", "findings": [], "rawModel": "deepseek-v4-flash"},
+    {"id": "S05", "verdict": "needs_revision", "findings": [{"severity": "high", "problem": "e.count 是累计值却被直接累加到 prev.count，同一 hash 多条记录导致 count 复利膨胀"}], "rawModel": "deepseek-v4-flash"},
+    {"id": "S06", "verdict": "pass", "findings": [], "rawModel": "deepseek-v4-flash"},
+    {"id": "S07", "verdict": "needs_revision", "findings": [{"severity": "high", "problem": "台账将用户输入文本前 200 字符作为摘要落盘，无脱敏/长度单位混淆，违反 §7.4 不得记录内容"}], "rawModel": "deepseek-v4-flash"},
+    {"id": "S08", "verdict": "needs_revision", "findings": [{"severity": "high", "problem": "dedup 侧用 rootCallId、消费侧用 rootCallId||token 作键，键不一致导致抑制失效或误抑制"}, {"severity": "medium", "problem": "result.isError 提前 return 未消费 suppressed，集合残留无效键造成内存泄漏"}], "rawModel": "deepseek-v4-flash"},
+    {"id": "S09", "verdict": "needs_revision", "findings": [{"severity": "high", "problem": "cmd 来源外部配置/参数未净化即传 exec，存在命令注入风险（如 '; rm -rf'）"}], "rawModel": "deepseek-v4-flash"},
+    {"id": "S10", "verdict": "needs_revision", "findings": [{"severity": "medium", "problem": "gateOk 无 TTL/容量限制，长跑进程多会话后内存无界增长"}], "rawModel": "deepseek-v4-flash"},
+    {"id": "S11", "verdict": "needs_revision", "findings": [{"severity": "medium", "problem": "slice(0,8192) 可能截断在 UTF-8 多字节字符或 surrogate pair 中间，产生非法字符/乱码"}], "rawModel": "deepseek-v4-flash"},
+    {"id": "S12", "verdict": "pass", "findings": [], "rawModel": "deepseek-v4-flash"}
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "experiment": "exp3-review-lane-effectiveness",
+  "generatedAt": "2026-08-29T09:39:00.054Z",
+  "arms": {
+    "cheap": {
+      "arm": "cheap",
+      "model": "deepseek-v4-flash",
+      "samples": 12,
+      "totalGold": 11,
+      "totalHits": 9,
+      "recall": 0.8182,
+      "totalFp": 1,
+      "fpRate": 0.1,
+      "autoMatchHits": 4,
+      "estimatedCostUSD": 0.0329,
+      "perDollarHits": 273.2,
+      "details": [
+        {
+          "id": "S01",
+          "title": "工具参数 schema 非法（扁平 map 未经编译）",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 1,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S02",
+          "title": "isReadTool 对 mcp__<server>__<tool> 组合名漏判",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S03",
+          "title": "完成正则漏 'fixed/implemented' 类完成语",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S04",
+          "title": "已读清单注入显示 NaNKB（lastReads 缺 bytes 字段）",
+          "goldCount": 1,
+          "hits": 0,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "pass",
+          "blocked": null
+        },
+        {
+          "id": "S05",
+          "title": "loadLedger count 复利膨胀",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S06",
+          "title": "DEDUP off-by-one：第 2 次读取不替换",
+          "goldCount": 1,
+          "hits": 0,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "pass",
+          "blocked": null
+        },
+        {
+          "id": "S07",
+          "title": "台账持久化写入内容摘要（§7.4 违反）",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S08",
+          "title": "suppressed 键不对称与 error 路径泄漏",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S09",
+          "title": "验证命令未净化（命令注入面）",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S10",
+          "title": "gateOk 无界增长",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S11",
+          "title": "规则文件 8KB 截断切断多字节字符",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S12",
+          "title": "审查模型选择绝不静默回落主模型（正样本）",
+          "goldCount": 0,
+          "hits": 0,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "pass",
+          "blocked": null
+        }
+      ]
+    },
+    "strong": {
+      "arm": "strong",
+      "model": "deepseek-v4",
+      "samples": 12,
+      "totalGold": 11,
+      "totalHits": 11,
+      "recall": 1,
+      "totalFp": 0,
+      "fpRate": 0,
+      "autoMatchHits": 8,
+      "estimatedCostUSD": 0.0666,
+      "perDollarHits": 165.3,
+      "details": [
+        {
+          "id": "S01",
+          "title": "工具参数 schema 非法（扁平 map 未经编译）",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S02",
+          "title": "isReadTool 对 mcp__<server>__<tool> 组合名漏判",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S03",
+          "title": "完成正则漏 'fixed/implemented' 类完成语",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S04",
+          "title": "已读清单注入显示 NaNKB（lastReads 缺 bytes 字段）",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S05",
+          "title": "loadLedger count 复利膨胀",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S06",
+          "title": "DEDUP off-by-one：第 2 次读取不替换",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S07",
+          "title": "台账持久化写入内容摘要（§7.4 违反）",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S08",
+          "title": "suppressed 键不对称与 error 路径泄漏",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S09",
+          "title": "验证命令未净化（命令注入面）",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S10",
+          "title": "gateOk 无界增长",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S11",
+          "title": "规则文件 8KB 截断切断多字节字符",
+          "goldCount": 1,
+          "hits": 1,
+          "fp": 0,
+          "autoHits": 1,
+          "verdict": "needs_revision",
+          "blocked": null
+        },
+        {
+          "id": "S12",
+          "title": "审查模型选择绝不静默回落主模型（正样本）",
+          "goldCount": 0,
+          "hits": 0,
+          "fp": 0,
+          "autoHits": 0,
+          "verdict": "pass",
+          "blocked": null
+        }
+      ]
+    }
+  },
+  "verdict": "PASS(cheap per-dollar >= 1.5x strong)"
+}

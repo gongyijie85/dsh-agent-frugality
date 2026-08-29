@@ -117,6 +117,7 @@ node scripts/experiment-report.mjs   # -> docs/experiments/YYYY-MM-DD-snapshot.{
 ```
 
 - 首份快照（2026-08-29）：34 次读取 / 5.9% 重复率 / 93KB / 门禁 3 过 3 拦 / 审查 lane 1 次 9 findings / 0 插件错误
+- **Exp-3 完成（2026-08-29）**：cheap 臂（flash）81.8% recall @ $0.033、**每美元命中 = 主模型 1.65×**；strong 臂 100%/0 误报 @ $0.067 → **双 lane 策略验证通过**（[结果](docs/experiments/exp3-results.md)）
 - 阈值与运营闭环：[`docs/EXPERIMENT.md`](docs/EXPERIMENT.md)（「运营模式」节）
 
 ## 发布与收录状态（v0.1.0，2026-08-29）

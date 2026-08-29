@@ -1,0 +1,18 @@
+{
+  "arm": "strong",
+  "model": "deepseek-v4",
+  "results": [
+    {"id": "S01", "verdict": "needs_revision", "findings": [{"severity": "high", "problem": "扁平 map 参数（如 {claim:{type:'string',required:true}}）不是合法 JSON Schema；tools.register 期望 {type:'object',properties,required}，直接透传会在注册/调用时触发 schema 校验崩溃。"}]},
+    {"id": "S02", "verdict": "needs_revision", "findings": [{"severity": "high", "problem": "isReadTool 仅匹配名称结尾为读取词；'mcp__qwen-mm-plugins-core__read_image' 结尾是 image，无法识别为读取工具，MCP 前缀组合工具的重复读取不被记账。"}]},
+    {"id": "S03", "verdict": "needs_revision", "findings": [{"severity": "low", "problem": "完成声明正则缺 fixed/implemented 等常见英语完成语，'bug fixed' 类声明无法触发完成门禁 objection。"}]},
+    {"id": "S04", "verdict": "needs_revision", "findings": [{"severity": "high", "problem": "lastReads 记录缺 bytes 字段，renderReadCache 读 e.bytes 得 undefined，界面显示 NaNKB。"}]},
+    {"id": "S05", "verdict": "needs_revision", "findings": [{"severity": "high", "problem": "loadLedger 用累加方式叠加 e.count，而 e.count 是历史累计值，恢复 3 次后 count=6 复利膨胀，DEDUP 会在本会话首次读取即误判重复。"}]},
+    {"id": "S06", "verdict": "needs_revision", "findings": [{"severity": "high", "problem": "dedup 条件 d.count<2 放行，第 2 次读取时 count=1 被放行，仅第 3 次才替换，漏掉干预层第 2 次重复的目标语义。"}]},
+    {"id": "S07", "verdict": "needs_revision", "findings": [{"severity": "medium", "problem": "ledgerAppend 将 text.slice(0,200) 内容摘要写入持久化台账，可能落盘敏感内容，违反台账只记元信息不记正文的规格。"}]},
+    {"id": "S08", "verdict": "needs_revision", "findings": [{"severity": "medium", "problem": "suppressed 键在 dedup 侧用 exec.rootCallId，在 tools/result 侧用 rootCallId||token，两侧键不一致导致重复计入；result.isError 提前 return 未先消费 suppressed，错误后集合项不清理，随调用累积泄漏。"}]},
+    {"id": "S09", "verdict": "needs_revision", "findings": [{"severity": "high", "problem": "verify 命令由配置或 args.verify 直接拼入 exec 且未净化，ALLOW_ARG_VERIFY=1 时模型可注入任意命令（如 '; rm -rf'），构成命令执行/RCE 面；workdir 也可被随意指定。"}]},
+    {"id": "S10", "verdict": "needs_revision", "findings": [{"severity": "medium", "problem": "gateOk.set(sid,...) 无 TTL/容量上限，长跑进程跨会话累积，内存无界增长。"}]},
+    {"id": "S11", "verdict": "needs_revision", "findings": [{"severity": "low", "problem": "readFileSync(...).slice(0,8192) 可能把多字节字符/emoji 的 surrogate pair 从中间截断，尾部出现损坏字符。"}]},
+    {"id": "S12", "verdict": "pass", "findings": []}
+  ]
+}

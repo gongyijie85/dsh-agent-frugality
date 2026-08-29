@@ -119,6 +119,7 @@ node scripts/experiment-report.mjs   # -> docs/experiments/YYYY-MM-DD-snapshot.{
 ```
 
 - First snapshot (2026-08-29): 34 reads, 5.9% duplicate rate, 93KB, gate 3 pass / 3 objections, review lane 1×9 findings, 0 plugin errors
+- **Exp-3 done (2026-08-29)**: cheap lane (flash) 81.8% recall @ $0.033 with **1.65× per-dollar hits vs strong**; strong (v4) 100%/0 FPs @ $0.067 → dual-lane policy validated ([results](docs/experiments/exp3-results.md))
 - Thresholds & ops loop: [`docs/EXPERIMENT.md`](docs/EXPERIMENT.md) ("运营模式" section)
 
 ## Release & ingestion status (v0.1.0, 2026-08-29)
