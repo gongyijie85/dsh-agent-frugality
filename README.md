@@ -20,14 +20,20 @@
 
 ## 安装
 
+**已发布（v0.1.0）**：
+
 ```powershell
-# 运行时注入（免重启；开发态）
+# GitHub 通道（主分发；marketplace 收录基于此）
+dsh plugin add github:gongyijie85/dsh-agent-frugality
+
+# npm 通道
+npm install dsh-agent-frugality
+
+# 运行时注入（本地开发态，免重启）
 dev_inject_plugin D:\plugins\dsh-agent-frugality
 # 卸载
 dev_uninject_plugin dsh-agent-frugality
 ```
-
-发布后：`dsh plugin add github:.../dsh-agent-frugality`（见 TICKETS T13-T16 发布流程）。
 
 ## 机制（一图流）
 

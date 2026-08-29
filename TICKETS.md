@@ -24,13 +24,13 @@
 - [x] **T10 独立代码审查**：子代理审查完成 verdict=NEEDS_REVISION（1 blocker + 3 HIGH + 2 medium + 4 low）；`frugality_review` 低成本 lane 同步审查（9 findings，采纳 4/豁免 5）
 - [x] **T11 修复 + 复审**：blocker（脚手架 no-op 化）+ 3 HIGH（NaNKB/复利/off-by-one 回归测试锁住）+ §7.4 + suppressed 键统一 + FR-6 预算全部关闭；误报/豁免 3 项记录理由；18/18 全绿
 
-## Phase 4 — 发布（待用户协助：GitHub 仓库创建 + npm 凭据）
+## Phase 4 — 发布（状态：GitHub ✅ / npm ✅ / Release ⏳ / 市场 topic ⏳）
 
-- [x] **T12 仓库初始化**：git init(main) + .gitignore（含脚手架残留忽略）+ commit `968d806`（12 文件 / 1398 行）+ tag `v0.1.0`
-- [ ] **T13 GitHub 仓库**：用户网页创建 `gongyijie85/dsh-agent-frugality`（public 空仓库）→ 自动推送 main + v0.1.0 tag + 加 topic=dsh-plugin
-- [ ] **T14 tag + Release**：tag 已打；Release notes = CHANGELOG 0.1.0 + docs/POST.md（推送后由 gh/网页创建）
-- [ ] **T15 npm**：package.json 已 `private:false` + repository 字段；`npm publish` 需用户终端执行（沙箱拒绝读 npm 凭据）或进一步授权
-- [ ] **T16 市场收录**：topic=dsh-plugin 后自动收录（AwesomeHou/dsh-plugin-marketplace 等 sync 型）
+- [x] **T12 仓库初始化**：git init(main) + .gitignore + commit `968d806`（12 文件 / 1398 行）+ tag `v0.1.0`
+- [x] **T13 GitHub 仓库**：**gongyijie85/dsh-agent-frugality 已创建并推送**（main @ `87eb0fe` + v0.1.0 tag，2026-08-29 用户执行）
+- [ ] **T14 tag + Release**：tag 已推送；GitHub Release 待创建（notes=CHANGELOG 0.1.0 + docs/POST.md，网页 30 秒或授权 gh）
+- [x] **T15 npm**：**dsh-agent-frugality@0.1.0 已发布**（npm whoami=gongyijie，registry 200 验证）
+- [ ] **T16 市场收录**：待仓库加 topic=dsh-plugin（AwesomeHou 自动同步；chnjames 目录站见 docs/MARKETPLACE.md）
 
 ## Phase 5 — 推广包装
 
