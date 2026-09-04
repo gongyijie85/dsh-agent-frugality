@@ -19,11 +19,17 @@
   "keywords": [
     "dsh-plugin",
     "deepseek-harness",
+    "dsh",
+    "cordis",
     "multi-agent",
-    "context-management",
+    "ai-agents",
     "agent-cost",
-    "tool-ledger",
-    "completion-gate"
+    "cost-optimization",
+    "token-efficiency",
+    "context-management",
+    "subagent",
+    "completion-gate",
+    "tool-ledger"
   ],
   "files": [
     "lib",
