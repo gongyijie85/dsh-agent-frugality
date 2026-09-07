@@ -24,13 +24,13 @@
 - [x] **T10 独立代码审查**：子代理审查完成 verdict=NEEDS_REVISION（1 blocker + 3 HIGH + 2 medium + 4 low）；`frugality_review` 低成本 lane 同步审查（9 findings，采纳 4/豁免 5）
 - [x] **T11 修复 + 复审**：blocker（脚手架 no-op 化）+ 3 HIGH（NaNKB/复利/off-by-one 回归测试锁住）+ §7.4 + suppressed 键统一 + FR-6 预算全部关闭；误报/豁免 3 项记录理由；18/18 全绿
 
-## Phase 4 — 发布（状态：GitHub ✅ / npm ✅ / Release ⏳ / 市场 topic ⏳）
+## Phase 4 — 发布（状态：GitHub ✅ / npm ✅ / Release ✅ (tgz 待补) / 市场 topic ✅ / curated PR ⏳）
 
 - [x] **T12 仓库初始化**：git init(main) + .gitignore + commit `968d806`（12 文件 / 1398 行）+ tag `v0.1.0`
 - [x] **T13 GitHub 仓库**：**gongyijie85/dsh-agent-frugality 已创建并推送**（main @ `87eb0fe` + v0.1.0 tag，2026-08-29 用户执行）
-- [ ] **T14 tag + Release**：tag 已推送；GitHub Release 待创建（notes=CHANGELOG 0.1.0 + docs/POST.md，网页 30 秒或授权 gh）
+- [x] **T14 tag + Release**：Release v0.1.0 已创建（2026-08-31，notes=CHANGELOG 0.1.0）——**待补 tgz 资产**（本地已生成 dsh-agent-frugality-0.1.0.tgz，上传即完成）
 - [x] **T15 npm**：**dsh-agent-frugality@0.1.0 已发布**（npm whoami=gongyijie，registry 200 验证）
-- [ ] **T16 市场收录**：待仓库加 topic=dsh-plugin（AwesomeHou 自动同步；chnjames 目录站见 docs/MARKETPLACE.md）
+- [ ] **T16 市场收录**：topic=dsh-plugin ✅（AwesomeHou 自动同步已满足）；awesome-dsh-plugin curated 注册表 PR **#4173 已提交**（2026-09-02，待维护者合并）；chnjames/0326 经 README 核查为 **topic 自动发现通道，无手动提交入口**，等同步即可（2026-09-02 registry.json / dsh-plugin.market API 均尚未出现，属正常等待期）
 
 ## Phase 5 — 推广包装
 
