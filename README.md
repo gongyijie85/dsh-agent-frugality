@@ -10,6 +10,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-18%2F18%20passing-brightgreen)]()
 [![Zero deps](https://img.shields.io/badge/dependencies-none-9cf)]()
+[![DSH](https://img.shields.io/badge/DSH-0.1.1--rc.2%2B-4d6bfe)](https://github.com/gongyijie85/dsh-agent-frugality)
+[![-multi-agent](https://img.shields.io/badge/-multi--agent-4d6bfe)]() [![-cost-optimization](https://img.shields.io/badge/-cost--optimization-4d6bfe)]() [![-read-ledger](https://img.shields.io/badge/-read--ledger-4d6bfe)]() [![-completion-gate](https://img.shields.io/badge/-completion--gate-4d6bfe)]() [![-cheap-review](https://img.shields.io/badge/-cheap--review-4d6bfe)]()
 
 > A **DeepSeek Harness (DSH) plugin** that defends multi-agent systems against three mechanism-level failure modes:
 > **read-ledger dedup · compaction-immune rules · mechanical completion gate · cheap-review lane**.

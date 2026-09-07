@@ -10,6 +10,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-18%2F18%20passing-brightgreen)]()
 [![Zero deps](https://img.shields.io/badge/dependencies-none-9cf)]()
+[![DSH](https://img.shields.io/badge/DSH-0.1.1--rc.2%2B-4d6bfe)](https://github.com/gongyijie85/dsh-agent-frugality)
+[![-多智能体](https://img.shields.io/badge/-多智能体-4d6bfe)]() [![-成本优化](https://img.shields.io/badge/-成本优化-4d6bfe)]() [![-读取台账](https://img.shields.io/badge/-读取台账-4d6bfe)]() [![-完成门禁](https://img.shields.io/badge/-完成门禁-4d6bfe)]() [![-低成本审查](https://img.shields.io/badge/-低成本审查-4d6bfe)]()
 
 > **DeepSeek Harness（DSH）插件**：对抗多智能体三层机制性失效的防御插件——
 > **读取台账去重 · 免疫压缩规则区 · 完成机械门禁 · 低成本审查 lane**。零外部依赖，注入即用。
