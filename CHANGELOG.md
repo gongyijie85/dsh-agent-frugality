@@ -2,6 +2,14 @@
 
 遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)；版本号遵循 [SemVer](https://semver.org/lang/zh-CN/)。
 
+## [0.1.1] - 2026-09-07
+
+### Changed
+
+- **声明 DSH 宿主依赖**：`package.json` 与 `dsh.plugin.json` 增加 `engines.dsh ">=0.1.1-rc.2"`（市场/registry 读取 package.json 判定宿主要求）。
+- **兼容性元数据**：`dsh` 块新增 `compatibility.dshReleases["0.1.1-rc.2"]="compatible"`，使 0.1.1-rc.2 线宿主装配预检识别为兼容；`files` 补齐 `dsh.plugin.json` 随包发布。
+- **零代码变更**：本版本仅 manifest/声明确认，`lib/` 运行代码与此前 0.1.0 逐位一致，无行为变化、无新增工具。
+
 ## [0.1.0] - 2026-08-29
 
 首个可发布版本。研究背景（D:\plugins\research\85k-experiment\）：多智能体系统三类机制性失效（子智能体重复读取、提示词失效、贵模型审查悖论）→ 本插件为 DSH 提供四层机制防御。
