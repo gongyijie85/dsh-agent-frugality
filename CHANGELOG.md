@@ -2,6 +2,12 @@
 
 遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)；版本号遵循 [SemVer](https://semver.org/lang/zh-CN/)。
 
+## [0.1.4] - 2026-09-10
+
+### Changed
+
+- **补 `exports` 映射**（8 个自研包中唯一缺失）：`"."` → `./lib/index.js`、`"./package.json"` → `"./package.json"`，与其余包口径一致。
+- **移除 `./core.js?v=3` 缓存击穿**：ESM 按 URL 缓存模块，带查询串会在热重载时产生**双模块实例**（状态/台账可能分裂）；改为固定 `./core.js`，重载取新代码由 loader 清缓存保证。
 ## [0.1.3] - 2026-09-10
 
 ### Changed
