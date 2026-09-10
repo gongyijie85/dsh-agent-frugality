@@ -133,6 +133,32 @@ test('lastAssistantTail: 最近 assistant 尾部', () => {
   assert.equal(lastAssistantTail({ events: [{ type: 'assistant/message', data: {} }] }), '')
 })
 
+test('lastAssistantTail: snapshotEvents() 回退（events 非数组的宿主形态）', () => {
+  const events = [
+    { type: 'assistant/message', data: { message: { content: [{ type: 'text', text: 'via snapshot' }] } } },
+  ]
+  // events 非数组 + 提供 snapshotEvents() → 走回退分支
+  assert.equal(lastAssistantTail({ events: undefined, snapshotEvents: () => events }), 'via snapshot')
+  assert.equal(lastAssistantTail({ events: 'not-array', snapshotEvents: () => events }), 'via snapshot')
+  assert.equal(lastAssistantTail({ events: null, snapshotEvents: () => events }), 'via snapshot')
+  // events 已是数组时优先取 events，不触碰 snapshotEvents（回归：不得改变既有语义）
+  let called = false
+  const spy = { events, snapshotEvents: () => { called = true; return [] } }
+  assert.equal(lastAssistantTail(spy), 'via snapshot')
+  assert.equal(called, false)
+  // 回退分支同样遵守 200 字符尾部截断
+  const long = [{ type: 'assistant/message', data: { message: { content: [{ type: 'text', text: 'y'.repeat(500) }] } } }]
+  assert.equal(lastAssistantTail({ snapshotEvents: () => long }).length, 200)
+  // 无 snapshotEvents 或返回空 → ''
+  assert.equal(lastAssistantTail({ events: 'x' }), '')
+  assert.equal(lastAssistantTail({}), '')
+  assert.equal(lastAssistantTail({ snapshotEvents: () => [] }), '')
+  // snapshotEvents 抛错被吞掉（catch 分支）
+  assert.equal(lastAssistantTail({ events: null, snapshotEvents: () => { throw new Error('boom') } }), '')
+  // snapshotEvents 非函数 → 不调用
+  assert.equal(lastAssistantTail({ events: undefined, snapshotEvents: 'nope' }), '')
+})
+
 test('reviewPromptFor: quick/deep 与截断', () => {
   const quick = reviewPromptFor('x', 'quick')
   const deep = reviewPromptFor('x', 'deep')

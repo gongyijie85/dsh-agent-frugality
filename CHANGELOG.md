@@ -2,6 +2,22 @@
 
 遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)；版本号遵循 [SemVer](https://semver.org/lang/zh-CN/)。
 
+## [0.1.3] - 2026-09-10
+
+### Changed
+
+- **三工具改走受校验的工具定义路径**：`frugality_gate` / `frugality_review` / `frugality_ledger` 改用 `@deepseek-ai/dsh-tools` 的 `defineTool` 构造，参数 schema 统一为 `additionalProperties: false`，非法/未声明参数在 execute 之前即被拒绝（此前由自研 `toJsonSchema` 生成 schema，校验口径不统一）。
+- **peerDependencies 修正**：补 `@deepseek-ai/dsh-tools ">=0.0.1-rc.1 <0.2.0"` 与 `@deepseek-ai/cordis "^4.0.1"`（原声明缺失/范围不匹配宿主实际装配）。
+- **兼容性枚举补全**：`dsh.compatibility.dshReleases` 由 17 键补至 20 键，新增 `0.1.5-alpha.2` / `0.1.5-rc.1` / `0.1.5-rc.2`（均 `compatible`），适配 0.1.5 线宿主。
+- **完成性检测兼容回退**：`lastAssistantTail` 在 `session.events` 非数组时回退调用 `session.snapshotEvents()`（0.1.5 线宿主的 session 形态）；`test/core.test.mjs` 新增该分支用例（含"events 为数组时不触碰 snapshotEvents"的语义回归）。
+
+## [0.1.2] - 2026-09-08
+
+### Changed
+
+- 声明 DSH 宿主依赖：`engines.dsh ">=0.1.0-rc.6"`（覆盖 0.1.0-rc.6 起全部 rc/alpha 线）。
+- `dsh.compatibility.dshReleases` 全量枚举 16 键（0.0.1-rc.1 起），`0.1.0-rc.6` 及之后标 `compatible`。
+
 ## [0.1.1] - 2026-09-07
 
 ### Changed

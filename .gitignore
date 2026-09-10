@@ -11,3 +11,6 @@ src/
 tsconfig.json
 tsdown.config.ts
 scripts/build.sh
+
+*.bak-*
+*.tmpdir/
